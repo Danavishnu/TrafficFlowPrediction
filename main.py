@@ -89,13 +89,13 @@ def plot_results(y_true, y_preds, names):
     date_format = mpl.dates.DateFormatter("%H:%M")
     ax.xaxis.set_major_formatter(date_format)
     fig.autofmt_xdate()
-
+    plt.savefig("comparison.png") 
     plt.show()
 
 
 def main():
     lstm = load_model('model/lstm.h5')
-    gru = load_model('model/gru.h5')
+    gru = load_model('model/lstm.h5')
     saes = load_model('model/saes.h5')
     models = [lstm, gru, saes]
     names = ['LSTM', 'GRU', 'SAEs']
@@ -113,7 +113,7 @@ def main():
         else:
             X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
         file = 'images/' + name + '.png'
-        plot_model(model, to_file=file, show_shapes=True)
+        # plot_model(model, to_file=file, show_shapes=True)
         predicted = model.predict(X_test)
         predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
         y_preds.append(predicted[:288])
