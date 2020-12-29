@@ -7,6 +7,10 @@ Traffic Flow Prediction with Neural Networks(SAEs、LSTM、GRU).
 - Keras 2.1.3
 - scikit-learn 0.19
 
+```
+pip install -r requirements.txt
+```
+
 ## Train the model
 
 **Run command below to train the model:**
