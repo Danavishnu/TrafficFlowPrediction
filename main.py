@@ -11,6 +11,8 @@ from keras.utils.vis_utils import plot_model
 import sklearn.metrics as metrics
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from  comp_prophet import *
+
 warnings.filterwarnings("ignore")
 
 
@@ -97,13 +99,15 @@ def main():
     lstm = load_model('model/lstm.h5')
     gru = load_model('model/lstm.h5')
     saes = load_model('model/saes.h5')
+    
     models = [lstm, gru, saes]
     names = ['LSTM', 'GRU', 'SAEs']
 
     lag = 12
     file1 = 'data/train.csv'
     file2 = 'data/test.csv'
-    _, _, X_test, y_test, scaler = process_data(file1, file2, lag)
+
+    X_train, y_train, X_test, y_test, scaler = process_data(file1, file2, lag)
     y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).reshape(1, -1)[0]
 
     y_preds = []
@@ -118,7 +122,22 @@ def main():
         predicted = scaler.inverse_transform(predicted.reshape(-1, 1)).reshape(1, -1)[0]
         y_preds.append(predicted[:288])
         print(name)
+        # print(predicted)
+        # print(type(predicted))
+        # print(predicted.shape)
+        # print(y_test)
         eva_regress(y_test, predicted)
+        
+    # Prophet 
+    # df1=pd.DataFrame({'ds': X_train, 'y': y_train.tolist()}, columns=['ds', 'y'])
+    # df2=pd.DataFrame({'ds': X_test, 'y': y_test.tolist()}, columns=['ds', 'y'])
+
+    prophet_prediction=get_prophet(file1,file2)
+
+    print("Prophet")
+    eva_regress(y_test,prophet_prediction)
+    y_preds.append(prophet_prediction[:288])
+    names.append("Prophet")
 
     plot_results(y_test[: 288], y_preds, names)
 

@@ -7,3 +7,5 @@ pandas
 pydot
 graphviz
 scipy
+pystan
+prophet
